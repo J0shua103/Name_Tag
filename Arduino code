@@ -1,0 +1,75 @@
+
+    #include <Wire.h>
+    #include "Adafruit_LEDBackpack.h"
+    #include "Adafruit_GFX.h"
+
+    #define NUM_MATRICES 3
+
+    Adafruit_8x8matrix matrix[NUM_MATRICES];
+    int buttonApin = 9;
+    int buttonBpin = 8;
+
+    void setup() {
+      Serial.begin(9600);
+      Serial.println("8x8 LED Matrix Test");
+      pinMode(buttonApin, INPUT_PULLUP);  
+      pinMode(buttonBpin, INPUT_PULLUP);
+      
+      for(uint8_t m=0; m<NUM_MATRICES; m++) {
+        matrix[m].begin(0x71 + m);
+      }
+    }
+
+    void loop() {
+       if (digitalRead(buttonApin) == LOW)
+       {
+
+      for(uint8_t m=0; m<NUM_MATRICES; m++) {
+        matrix[m].clear();
+     
+        matrix[m].setTextSize(1);
+        matrix[m].setTextWrap(false);  // we dont want text to wrap so it scrolls nicely
+        matrix[m].setTextColor(LED_ON);
+        matrix[m].setRotation(4);
+      }
+      Scroll("  C.E.I.S.M.C Lego Camp");
+    
+    }
+    if (digitalRead(buttonBpin) == LOW)
+    {for(uint8_t m=0; m<NUM_MATRICES; m++) {
+        matrix[m].clear();
+     
+        matrix[m].setTextSize(1);
+        matrix[m].setTextWrap(false);  // we dont want text to wrap so it scrolls nicely
+        matrix[m].setTextColor(LED_ON);
+        matrix[m].setRotation(4);
+      }
+      Scroll("  My Name is Joshua");
+    }
+  else
+  {for(uint8_t m=0; m<NUM_MATRICES; m++) {
+        matrix[m].clear();
+     
+        matrix[m].setTextSize(1);
+        matrix[m].setTextWrap(false);  // we dont want text to wrap so it scrolls nicely
+        matrix[m].setTextColor(LED_ON);
+        matrix[m].setRotation(4);
+      }
+      Scroll("Questions???????");
+
+ }
+    }
+    void Scroll(char* text)
+    {
+      int scrollPositions = (strlen(text) * 8) + 32;
+     
+      for (int x=0; x>=-scrollPositions; x--) {
+       for(uint8_t m=0; m<NUM_MATRICES; m++) {
+        matrix[m].clear();
+        matrix[m].setCursor((x - (m * 8)), 0);
+        matrix[m].print(text);
+        matrix[m].writeDisplay();
+       }
+       delay(65);
+      }
+  }
